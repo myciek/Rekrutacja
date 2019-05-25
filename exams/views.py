@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from exams.models import Example
-from exams.serializers import ExampleSerializer
+from exams.models import Exercise
+from exams.serializers import ExerciseSerializer
 from rest_framework import status, permissions
 from exams.permissions import IsOwnerOrReadOnly
 
@@ -14,12 +14,12 @@ class ExampleList(APIView):
     permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly)
 
     def get(self, request, format=None):
-        race = Example.objects.all()
-        serializer = ExampleSerializer(race, many=True)
+        race = Exercise.objects.all()
+        serializer = ExerciseSerializer(race, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = ExampleSerializer(data=request.data)
+        serializer = ExerciseSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

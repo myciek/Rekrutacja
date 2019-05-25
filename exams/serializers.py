@@ -1,14 +1,14 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from exams.models import Example
+from exams.models import Exercise
 
 
 class UserSerializer(serializers.ModelSerializer):
-    examples = serializers.PrimaryKeyRelatedField(many=True, queryset=Example.objects.all())
+    examples = serializers.PrimaryKeyRelatedField(many=True, queryset=Exercise.objects.all())
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'examples')
+        fields = ('id', 'username', 'email', 'exercises')
 
 
 class SignUpSerializer(serializers.ModelSerializer):
@@ -17,9 +17,9 @@ class SignUpSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'password')
 
 
-class ExampleSerializer(serializers.ModelSerializer):
+class ExerciseSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
-        model = Example
-        fields = ('text','owner')
+        model = Exercise
+        fields = ('text', 'owner')
