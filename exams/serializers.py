@@ -3,17 +3,17 @@ from rest_framework import serializers
 from exams.models import Exercise, Exam, PossibleAnswers, AnswerSheet, Answer
 
 
-class PossibleAnswersSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PossibleAnswers
-        fields = ('key', 'value')
-
-
 class ExerciseSerializer(serializers.ModelSerializer):
-    possible_answers = PossibleAnswersSerializer(many=True)
-
     class Meta:
         model = Exercise
+        fields = ('name', 'text', 'written_exercise', 'max_points')
+
+
+class PossibleAnswersSerializer(serializers.ModelSerializer):
+    exercise = ExerciseSerializer()
+
+    class Meta:
+        model = PossibleAnswers
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
@@ -21,11 +21,12 @@ class ExerciseSerializer(serializers.ModelSerializer):
         fields = kwargs.pop('fields', None)
 
         # Instantiate the superclass normally
-        super(ExerciseSerializer, self).__init__(*args, **kwargs)
+        super(PossibleAnswersSerializer, self).__init__(*args, **kwargs)
 
         if fields is not None:
-            # Drop fields specified in the 'fields' argument.
+            # Drop any fields that specified in the `fields` argument.
             not_allowed = set(fields)
+
             for field_name in not_allowed:
                 self.fields.pop(field_name)
 
@@ -56,8 +57,8 @@ class AnswerSheetSerializer(serializers.ModelSerializer):
 
 class AnswerSerializer(serializers.ModelSerializer):
     answer_sheet = AnswerSheetSerializer()
-    exercise = ExerciseSerializer(fields=('correct_answer',))
-    answer = PossibleAnswersSerializer()
+    exercise = ExerciseSerializer()
+    answer = PossibleAnswersSerializer(fields=('correct',))
 
     class Meta:
         model = Answer
