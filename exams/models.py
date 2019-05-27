@@ -2,21 +2,19 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class PossibleAnswers(models.Model):
-    key = models.CharField(max_length=10)
-    value = models.CharField(max_length=100)
-
-
 # Single task, written or with answers to choose
 class Exercise(models.Model):
     name = models.CharField(max_length=50)  # Name of the exercise
     text = models.CharField(max_length=200)  # Content of the exercise
     written_exercise = models.BooleanField(default=False)  # True if student have to write answer
-    possible_answers = models.ManyToManyField(PossibleAnswers,
-                                              blank=True)  # If written_exercise = False, array of possible answer
-    correct_answer = models.ForeignKey(PossibleAnswers, blank=True, on_delete=models.CASCADE,
-                                       related_name='correct_answer')  # If written_exercise = False, correct answer
     max_points = models.DecimalField(max_digits=4, decimal_places=2)  # Maximum points that student can get
+
+
+class PossibleAnswers(models.Model):
+    key = models.CharField(max_length=10)
+    value = models.CharField(max_length=100)
+    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
+    correct = models.BooleanField(default=False)
 
 
 # Exam sheet
