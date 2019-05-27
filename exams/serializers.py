@@ -1,6 +1,6 @@
-from django.contrib.auth.models import User, Group
+# from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from exams.models import Exercise, Exam, PossibleAnswer, AnswerSheet, Answer
+from exams.models import Exercise, Exam, PossibleAnswer, AnswerSheet, Answer, User
 
 
 class ExerciseSerializer(serializers.ModelSerializer):
@@ -47,12 +47,9 @@ class ExamSerializer(serializers.ModelSerializer):
 
 
 class AnswerSheetSerializer(serializers.ModelSerializer):
-    exam = ExamSerializer()
-    student = UserSerializer()
-
     class Meta:
         model = AnswerSheet
-        fields = ('exam', 'student', 'points', 'grade')
+        fields = ('id', 'points', 'grade')
 
 
 class AnswerSerializer(serializers.ModelSerializer):
