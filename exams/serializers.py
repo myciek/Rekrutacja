@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from exams.models import Exercise, Exam, PossibleAnswers, AnswerSheet, Answer
+from exams.models import Exercise, Exam, PossibleAnswer, AnswerSheet, Answer
 
 
 class ExerciseSerializer(serializers.ModelSerializer):
@@ -9,11 +9,11 @@ class ExerciseSerializer(serializers.ModelSerializer):
         fields = ('name', 'text', 'written_exercise', 'max_points')
 
 
-class PossibleAnswersSerializer(serializers.ModelSerializer):
+class PossibleAnswerSerializer(serializers.ModelSerializer):
     exercise = ExerciseSerializer()
 
     class Meta:
-        model = PossibleAnswers
+        model = PossibleAnswer
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
@@ -21,7 +21,7 @@ class PossibleAnswersSerializer(serializers.ModelSerializer):
         fields = kwargs.pop('fields', None)
 
         # Instantiate the superclass normally
-        super(PossibleAnswersSerializer, self).__init__(*args, **kwargs)
+        super(PossibleAnswerSerializer, self).__init__(*args, **kwargs)
 
         if fields is not None:
             # Drop any fields that specified in the `fields` argument.
@@ -43,7 +43,7 @@ class ExamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Exam
-        fields = ('owner', 'exercises', 'max_points')
+        fields = ('owner', 'subject', 'exercises', 'max_points')
 
 
 class AnswerSheetSerializer(serializers.ModelSerializer):
@@ -58,7 +58,7 @@ class AnswerSheetSerializer(serializers.ModelSerializer):
 class AnswerSerializer(serializers.ModelSerializer):
     answer_sheet = AnswerSheetSerializer()
     exercise = ExerciseSerializer()
-    answer = PossibleAnswersSerializer(fields=('correct',))
+    answer = PossibleAnswerSerializer(fields=('correct',))
 
     class Meta:
         model = Answer
