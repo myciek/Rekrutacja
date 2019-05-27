@@ -3,18 +3,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from exams.models import Exercise
-from exams.serializers import PossibleAnswersSerializer, ExerciseSerializer, ExamSerializer, PossibleAnswersSerializer, \
-    AnswerSheetSerializer, AnswerSerializer
+from exams.serializers import PossibleAnswerSerializer, ExerciseSerializer, ExamSerializer, AnswerSheetSerializer, \
+    AnswerSerializer
 from rest_framework import status, permissions
 from exams.permissions import IsOwnerOrReadOnly
 
 
 # Create your views here.
 
-class ExampleList(APIView):
+class ExerciseList(APIView):
     permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly)
 
-    def get(self, request):
+    def get(self):
         race = Exercise.objects.all()
         serializer = ExerciseSerializer(race, many=True)
         return Response(serializer.data)
