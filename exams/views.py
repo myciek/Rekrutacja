@@ -11,82 +11,40 @@ from django.http import Http404
 
 
 # Create your views here.
-
-class ExerciseList(generics.ListCreateAPIView):
-    queryset = Exercise.objects.all()
+class ExerciseViewSet(viewsets.ModelViewSet):
     serializer_class = ExerciseSerializer
-    permission_classes = (IsTeacher, IsOwnerOrReadOnly, IsAuthenticated)
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.serializer_class(queryset, many=True)
-
-        return Response(serializer.data)
+    queryset = Exercise.objects.all()
+    permission_classes = (IsOwnerOrReadOnly, IsTeacher, IsAuthenticated)
 
     def perform_create(self, serializer):
-        self.check_object_permissions(self.request, Exercise)
-        serializer.save()
+        serializer.save(student=self.request.user)
 
 
-class PossibleAnswerList(generics.ListCreateAPIView):
-    queryset = PossibleAnswer.objects.all()
+class PossibleAnswerViewSet(viewsets.ModelViewSet):
     serializer_class = PossibleAnswerSerializer
-    permission_classes = (IsTeacher, IsOwnerOrReadOnly, IsAuthenticated)
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.serializer_class(queryset, many=True)
-
-        return Response(serializer.data)
-
-    def perform_create(self, serializer):
-        self.check_object_permissions(self.request, PossibleAnswer)
-        serializer.save()
+    queryset = PossibleAnswer.objects.all()
+    permission_classes = (IsOwnerOrReadOnly, IsTeacher, IsAuthenticated)
 
 
-class ExamList(generics.ListCreateAPIView):
-    queryset = Exam.objects.all()
+class ExamViewSet(viewsets.ModelViewSet):
     serializer_class = ExamSerializer
-    permission_classes = (IsTeacher, IsOwnerOrReadOnly, IsAuthenticated)
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.serializer_class(queryset, many=True)
-
-        return Response(serializer.data)
+    queryset = Exam.objects.all()
+    permission_classes = (IsOwnerOrReadOnly, IsTeacher, IsAuthenticated)
 
     def perform_create(self, serializer):
-        self.check_object_permissions(self.request, Exam)
-        serializer.save()
+        serializer.save(owner=self.request.user)
 
 
-class AnswerSheetList(generics.ListCreateAPIView):
-    queryset = AnswerSheet.objects.all()
+class AnswerSheetViewSet(viewsets.ModelViewSet):
     serializer_class = AnswerSheetSerializer
+    queryset = AnswerSheet.objects.all()
     permission_classes = (IsAuthenticated,)
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.serializer_class(queryset, many=True)
-
-        return Response(serializer.data)
-
     def perform_create(self, serializer):
-        self.check_object_permissions(self.request, AnswerSheet)
-        serializer.save()
+        serializer.save(student=self.request.user)
 
 
-class AnswerList(generics.ListCreateAPIView):
-    queryset = Answer.objects.all()
+class AnswerViewSet(viewsets.ModelViewSet):
     serializer_class = AnswerSerializer
+    queryset = Answer.objects.all()
     permission_classes = (IsAuthenticated,)
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.serializer_class(queryset, many=True)
-
-        return Response(serializer.data)
-
-    def perform_create(self, serializer):
-        self.check_object_permissions(self.request, Answer)
-        serializer.save()

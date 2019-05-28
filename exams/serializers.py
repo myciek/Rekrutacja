@@ -27,7 +27,7 @@ class ExamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Exam
-        fields = ('subject', 'exercises', 'max_points')
+        fields = '__all__'
 
 
 class AnswerSheetSerializer(serializers.ModelSerializer):
