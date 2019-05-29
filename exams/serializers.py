@@ -10,8 +10,6 @@ class ExerciseSerializer(serializers.ModelSerializer):
 
 
 class PossibleAnswerSerializer(serializers.ModelSerializer):
-    exercise = ExerciseSerializer()
-
     class Meta:
         model = PossibleAnswer
         fields = '__all__'
@@ -24,21 +22,18 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ExamSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Exam
         fields = '__all__'
 
 
 class AnswerSheetSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = AnswerSheet
         fields = ('exam', 'points', 'grade')
 
 
 class AnswerSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Answer
         fields = ('answer_sheet', 'exercise', 'answer', 'written_answer')
