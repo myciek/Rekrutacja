@@ -1,9 +1,14 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+
+
+class User(AbstractUser):
+    is_teacher = models.BooleanField(default=False)
 
 
 # Single task, written or with answers to choose
 class Exercise(models.Model):
+    owner = models.ForeignKey(User, related_name='exercises', on_delete=models.CASCADE)
     name = models.CharField(max_length=50)  # Name of the exercise
     text = models.CharField(max_length=200)  # Content of the exercise
     written_exercise = models.BooleanField(default=False)  # True if student have to write answer
@@ -47,7 +52,7 @@ class AnswerSheet(models.Model):
 class Answer(models.Model):
     answer_sheet = models.ForeignKey(AnswerSheet, on_delete=models.CASCADE)
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
-    answer = models.ForeignKey(PossibleAnswer, on_delete=models.CASCADE, blank=True)
+    answer = models.ForeignKey(PossibleAnswer, on_delete=models.CASCADE, blank=True, null=True)
     written_answer = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
