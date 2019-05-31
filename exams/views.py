@@ -11,14 +11,13 @@ from django.http import Http404
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-
 # Create your views here.
 class ExerciseViewSet(viewsets.ModelViewSet):
     serializer_class = ExerciseSerializer
     queryset = Exercise.objects.all()
-    permission_classes = (IsOwnerOrReadOnly, IsTeacher, IsAuthenticated)
+    permission_classes = (IsOwnerOrReadOnly, IsAuthenticated,IsTeacher )
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields  =('owner', 'is_written')
+    filterset_fields = ('owner', 'written_exercise')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -56,7 +55,3 @@ class AnswerViewSet(viewsets.ModelViewSet):
     serializer_class = AnswerSerializer
     queryset = Answer.objects.all()
     permission_classes = (IsAuthenticated,)
-
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)

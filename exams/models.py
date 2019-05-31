@@ -5,6 +5,10 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     is_teacher = models.BooleanField(default=False)
 
+    def create_user(self, username, email=None, password=None, **extra_fields):
+        extra_fields.setdefault('is_teacher', False)
+        return self._create_user(username, email, password, **extra_fields)
+
 
 # Single task, written or with answers to choose
 class Exercise(models.Model):
@@ -32,7 +36,7 @@ class PossibleAnswer(models.Model):
 class Exam(models.Model):
     owner = models.ForeignKey(User, related_name='exams', on_delete=models.CASCADE)
     subject = models.CharField(max_length=100)
-    exercises = models.ManyToManyField(Exercise)
+    exercises = models.ManyToManyField(Exercise, blank= True)
     max_points = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
@@ -54,6 +58,7 @@ class Answer(models.Model):
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
     answer = models.ForeignKey(PossibleAnswer, on_delete=models.CASCADE, blank=True, null=True)
     written_answer = models.CharField(max_length=200, blank=True)
+    points = models.DecimalField(max_digits=5, decimal_places=2, blank=True, default=0)
 
     def __str__(self):
         return "Answer to " + str(self.exercise)
